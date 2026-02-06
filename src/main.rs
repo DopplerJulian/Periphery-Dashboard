@@ -13,7 +13,7 @@ use embassy_time::Timer;
 //Panic Handler
 use panic_probe as _;
 // Defmt Logging
-use defmt::{error, info, warn};
+use defmt::info;
 use defmt_rtt as _;
 
 /// Tell the Boot ROM about our application
@@ -22,8 +22,12 @@ use defmt_rtt as _;
 pub static IMAGE_DEF: ImageDef = hal::block::ImageDef::secure_exe();
 
 #[embassy_executor::main]
-async fn main(_spawner: Spawner) {
+async fn main(spawner: Spawner) {
     let p = embassy_rp::init(Default::default());
+
+    let _bt_controller = bluetooth::init_bluetooth_controller(
+        p.PIN_23, p.PIN_25, p.PIO0, p.PIN_24, p.PIN_29, p.DMA_CH0, &spawner,
+    );
 
     info!("Starting periphery_dashboard");
 

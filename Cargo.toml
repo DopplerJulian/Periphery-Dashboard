@@ -32,3 +32,23 @@ embassy-rp = { version = "0.9.0", features = [
 # Defmt Logging
 defmt = "1.0.1"
 defmt-rtt = "1.1.0"
+
+# Bluetooth LE
+trouble-host = { version = "0.5.1", features = ["peripheral", "security"] }
+
+cyw43-firmware = { version = "0.1.0", features = ["bluetooth", "wifi"] }
+cyw43 = { version = "0.6.0", features = ["bluetooth"] }
+cyw43-pio = "0.9.0"
+static_cell = "2.1.1"
+
+
+# required because of cyw43::new_with_bluetooth() and cyw43_task()
+[patch.crates-io]
+cyw43 = { git = "https://github.com/embassy-rs/embassy.git", rev = "729f96b9521d6705c1d664f4e9c636155d440519" }
+embassy-time = { git = "https://github.com/embassy-rs/embassy.git", rev = "729f96b9521d6705c1d664f4e9c636155d440519" }
+embassy-time-driver = { git = "https://github.com/embassy-rs/embassy.git", rev = "729f96b9521d6705c1d664f4e9c636155d440519" }
+embassy-executor = { git = "https://github.com/embassy-rs/embassy.git", rev = "729f96b9521d6705c1d664f4e9c636155d440519" }
+embassy-rp = { git = "https://github.com/embassy-rs/embassy.git", rev = "729f96b9521d6705c1d664f4e9c636155d440519" }
+cyw43-pio = { git = "https://github.com/embassy-rs/embassy.git", rev = "729f96b9521d6705c1d664f4e9c636155d440519" }
+embassy-sync = { git = "https://github.com/embassy-rs/embassy.git", rev = "729f96b9521d6705c1d664f4e9c636155d440519" }
+embassy-futures = { git = "https://github.com/embassy-rs/embassy.git", rev = "729f96b9521d6705c1d664f4e9c636155d440519" }
