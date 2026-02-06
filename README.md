@@ -33,3 +33,4 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 - [ ] Configure passkey or numeric comparison pairing
 - [ ] Implement image decompression 
 - [ ] Override a segment of the display relevant information (e.g. last image received, last connection to hub, current firmware version)
+- [ ] Optimize for energy efficiency

@@ -1,6 +1,9 @@
 #![no_std]
 #![no_main]
 
+mod bluetooth;
+mod eink;
+
 use embassy_executor::Spawner;
 use embassy_rp as hal;
 use embassy_rp::block::ImageDef;
