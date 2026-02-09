@@ -5,7 +5,7 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 ## Hardware Requirements
 
 - [Raspberry Pi Pico 2 W](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#pico2w-technical-specification)
-- E-ink display ([Waveshare 7.5" 3 Color E-ink display](https://www.waveshare.com/wiki/7.5inch_e-Paper_HAT_(B)_Manual))
+- E-ink display ([Waveshare 7.5" 3 Color E-ink display](https://www.waveshare.com/wiki/Pico-ePaper-7.5-B)
 - Debug probe (Optional)
 
 ## Software Tools
@@ -35,3 +35,4 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 - [ ] Override a segment of the display relevant information (e.g. last image received, last connection to hub, current firmware version)
 - [ ] Optimize for energy efficiency
 - [ ] Implement settings
+- [ ] Use async display driver
