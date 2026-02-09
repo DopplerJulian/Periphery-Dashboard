@@ -5,10 +5,13 @@ mod bluetooth;
 mod eink;
 
 use embassy_executor::Spawner;
-use embassy_rp as hal;
 use embassy_rp::block::ImageDef;
-use embassy_rp::gpio::{Level, Output};
+use embassy_rp::gpio::{Input, Level, Output, Pull};
+use embassy_rp::spi::Spi;
+use embassy_rp::{self as hal, spi};
 use embassy_time::Timer;
+
+use embedded_hal_bus::spi::ExclusiveDevice;
 
 //Panic Handler
 use panic_probe as _;
@@ -25,11 +28,26 @@ pub static IMAGE_DEF: ImageDef = hal::block::ImageDef::secure_exe();
 async fn main(spawner: Spawner) {
     let p = embassy_rp::init(Default::default());
 
+    info!("Starting periphery_dashboard");
+
     let _bt_controller = bluetooth::init_bluetooth_controller(
         p.PIN_23, p.PIN_25, p.PIO0, p.PIN_24, p.PIN_29, p.DMA_CH0, &spawner,
     );
 
-    info!("Starting periphery_dashboard");
+    info!("initialized Bluetooth Controller");
+
+    let spi = Spi::new_blocking_txonly(p.SPI1, p.PIN_10, p.PIN_11, spi::Config::default());
+    let cs_pin = Output::new(p.PIN_9, Level::Low);
+    let mut spi_dev =
+        ExclusiveDevice::new_no_delay(spi, cs_pin).expect("display count 1 should not panic");
+
+    let busy_pin = Input::new(p.PIN_13, Pull::Up);
+    let dc_pin = Output::new(p.PIN_8, Level::Low);
+    let rst_pin = Output::new(p.PIN_12, Level::Low);
+
+    eink::init_display(&mut spi_dev, busy_pin, dc_pin, rst_pin)
+        .await
+        .expect("tried to init display");
 
     let mut led = Output::new(p.PIN_15, Level::Low);
     loop {
