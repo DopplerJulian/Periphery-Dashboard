@@ -1,3 +1,4 @@
+use defmt::info;
 use embassy_rp::{
     gpio::{Input, Output},
     peripherals::SPI1,
@@ -26,18 +27,23 @@ pub struct Display<'a> {
     sleeping: bool,
 }
 impl<'a> Display<'a> {
-    pub async fn new(
+    pub fn new(
         mut spi: ExclusiveDevice<Spi<'a, SPI1, Blocking>, Output<'a>, NoDelay>,
         busy_in: Input<'a>,
         dc: Output<'a>,
         rst: Output<'a>,
     ) -> Result<Self, DeviceError<spi::Error, core::convert::Infallible>> {
+        info!("setting up display");
         // Setup EPD
         let epd = Epd7in5::new(&mut spi, busy_in, dc, rst, &mut Delay, None)?;
+
+        info!("epd created");
 
         // Use display graphics from embedded-graphics
         let mut display = Display7in5::default();
         display.clear(TriColor::White);
+
+        info!("display created");
 
         Ok(Display {
             epd,
@@ -63,11 +69,11 @@ impl<'a> Display<'a> {
             .update_and_display_frame(&mut self.spi, self.display.buffer(), &mut Delay)
             .unwrap();
         // Let the display settle
-        Timer::after_millis(3_000).await;
+        Timer::after_millis(16_000).await;
         Ok(())
     }
 
-    pub async fn display_text(
+    pub fn display_text(
         &mut self,
     ) -> Result<(), DeviceError<spi::Error, core::convert::Infallible>> {
         let text_style = MonoTextStyleBuilder::new()
@@ -79,6 +85,9 @@ impl<'a> Display<'a> {
             .draw(&mut self.display)
             .unwrap();
 
+        self.epd
+            .update_and_display_frame(&mut self.spi, self.display.buffer(), &mut Delay)
+            .unwrap();
         Ok(())
     }
 }

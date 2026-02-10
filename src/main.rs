@@ -31,7 +31,7 @@ async fn main(spawner: Spawner) {
     info!("Starting periphery_dashboard");
 
     let spi = Spi::new_blocking_txonly(p.SPI1, p.PIN_10, p.PIN_11, spi::Config::default());
-    let cs_pin = Output::new(p.PIN_9, Level::Low);
+    let cs_pin = Output::new(p.PIN_9, Level::High);
     let spi_dev =
         ExclusiveDevice::new_no_delay(spi, cs_pin).expect("display count 1 should not panic");
 
@@ -39,11 +39,18 @@ async fn main(spawner: Spawner) {
     let dc_pin = Output::new(p.PIN_8, Level::Low);
     let rst_pin = Output::new(p.PIN_12, Level::Low);
 
-    let _d = display::Display::new(spi_dev, busy_pin, dc_pin, rst_pin)
-        .await
-        .expect("tried to init display");
+    let mut _d =
+        display::Display::new(spi_dev, busy_pin, dc_pin, rst_pin).expect("tried to init display");
 
     info!("initialized Display");
+
+    _d.clear().await.unwrap();
+    info!("cleared Display");
+    _d.display_text().unwrap();
+    info!("displaying Text");
+    Timer::after_millis(30_000).await;
+    _d.clear().await.unwrap();
+    info!("cleared Display");
 
     let _bt_controller = bluetooth::init_bluetooth_controller(
         p.PIN_23, p.PIN_25, p.PIO0, p.PIN_24, p.PIN_29, p.DMA_CH0, &spawner,
