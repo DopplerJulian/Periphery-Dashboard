@@ -2,7 +2,7 @@
 #![no_main]
 
 mod bluetooth;
-mod eink;
+mod display;
 
 use embassy_executor::Spawner;
 use embassy_rp::block::ImageDef;
@@ -45,7 +45,7 @@ async fn main(spawner: Spawner) {
     let dc_pin = Output::new(p.PIN_8, Level::Low);
     let rst_pin = Output::new(p.PIN_12, Level::Low);
 
-    eink::init_display(&mut spi_dev, busy_pin, dc_pin, rst_pin)
+    display::init_display(&mut spi_dev, busy_pin, dc_pin, rst_pin)
         .await
         .expect("tried to init display");
 

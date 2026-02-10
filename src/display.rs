@@ -27,6 +27,7 @@ where
 
     // Use display graphics from embedded-graphics
     let mut display = Display7in5::default();
+    display.clear(TriColor::White);
 
     info!("starting display test");
     // Use embedded graphics for drawing a line
