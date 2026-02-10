@@ -4,7 +4,11 @@ use embassy_rp::{
     spi::{self, Blocking, Spi},
 };
 use embassy_time::{Delay, Timer};
-use embedded_graphics::prelude::*;
+use embedded_graphics::{
+    mono_font::{MonoTextStyleBuilder, ascii::FONT_10X20},
+    prelude::*,
+    text::{Baseline, Text},
+};
 
 use embedded_hal_bus::spi::{DeviceError, ExclusiveDevice, NoDelay};
 use epd_waveshare::{epd7in5b_v2::*, prelude::*};
@@ -17,7 +21,7 @@ pub struct Display<'a> {
         Output<'a>,
         Delay,
     >,
-    frame: Display7in5,
+    display: Display7in5,
     spi: ExclusiveDevice<Spi<'a, SPI1, Blocking>, Output<'a>, NoDelay>,
     sleeping: bool,
 }
@@ -37,7 +41,7 @@ impl<'a> Display<'a> {
 
         Ok(Display {
             epd,
-            frame: display,
+            display,
             spi,
             sleeping: false,
         })
@@ -53,13 +57,28 @@ impl<'a> Display<'a> {
         // Clear e-paper display's internal buffer
         self.epd.clear_frame(&mut self.spi, &mut Delay)?;
         // Fill the display white
-        self.frame.clear(TriColor::White);
+        self.display.clear(TriColor::White);
         // Update screen
         self.epd
-            .update_and_display_frame(&mut self.spi, self.frame.buffer(), &mut Delay)
+            .update_and_display_frame(&mut self.spi, self.display.buffer(), &mut Delay)
             .unwrap();
         // Let the display settle
         Timer::after_millis(3_000).await;
+        Ok(())
+    }
+
+    pub async fn display_text(
+        &mut self,
+    ) -> Result<(), DeviceError<spi::Error, core::convert::Infallible>> {
+        let text_style = MonoTextStyleBuilder::new()
+            .font(&FONT_10X20)
+            .text_color(TriColor::Black)
+            .build();
+
+        Text::with_baseline("Test", Point::new(3, 100), text_style, Baseline::Top)
+            .draw(&mut self.display)
+            .unwrap();
+
         Ok(())
     }
 }
