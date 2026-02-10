@@ -1,3 +1,7 @@
+<p align="center">
+    <a href="https://github.com/DopplerJulian/Periphery-Dashboard"><img src="https://github.com/DopplerJulian/Periphery-Dashboard/actions/workflows/rust.yml/badge.svg" alt="Github CI"></a>
+</p>
+
 # Peripheral Dashboard for Raspberry Pi Pico 2 W
 
 This project aims to provide the firmware for an E-ink dashboard that, in conjunction with a local hub, can display images transmitted on a regular basis.
