@@ -69,7 +69,7 @@ impl<'a> Display<'a> {
             .update_and_display_frame(&mut self.spi, self.display.buffer(), &mut Delay)
             .unwrap();
         // Let the display settle
-        Timer::after_millis(16_000).await;
+        Timer::after_millis(14_000).await;
         Ok(())
     }
 
