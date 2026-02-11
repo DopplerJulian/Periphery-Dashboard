@@ -41,6 +41,8 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 - [ ] Optimize for energy efficiency
 - [ ] Implement settings
 - [ ] Use async display driver
+- [ ] Introduce diagnostic LED
+- [ ] Introduce button(s) for basic control
 
 ## (Planned) Lifecycle
 
