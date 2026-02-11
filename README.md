@@ -35,8 +35,17 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 ### Future
 
 - [ ] Configure passkey or numeric comparison pairing
+- [ ] Implement reconnection with known Hubs
 - [ ] Implement image decompression 
 - [ ] Override a segment of the display relevant information (e.g. last image received, last connection to hub, current firmware version)
 - [ ] Optimize for energy efficiency
 - [ ] Implement settings
 - [ ] Use async display driver
+
+## (Planned) Lifecycle
+
+1) Initialize drivers and clear display
+2) Advertise as Bluetooth LE peripheral
+3) Pair and synchronise with Hub
+4) Display recieved images
+5) If the Hub disconnects return to pair mode
