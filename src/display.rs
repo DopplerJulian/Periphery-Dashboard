@@ -4,7 +4,7 @@ use embassy_rp::{
     peripherals::SPI1,
     spi::{self, Blocking, Spi},
 };
-use embassy_time::{Delay, Timer};
+use embassy_time::Delay;
 use embedded_graphics::{
     mono_font::{MonoTextStyleBuilder, ascii::FONT_10X20},
     prelude::*,
@@ -35,7 +35,8 @@ impl<'a> Display<'a> {
     ) -> Result<Self, DeviceError<spi::Error, core::convert::Infallible>> {
         info!("setting up display");
         // Setup EPD
-        let epd = Epd7in5::new(&mut spi, busy_in, dc, rst, &mut Delay, None)?;
+        let mut epd = Epd7in5::new(&mut spi, busy_in, dc, rst, &mut Delay, None)?;
+        epd.set_background_color(TriColor::White);
 
         info!("epd created");
 
@@ -60,16 +61,11 @@ impl<'a> Display<'a> {
             self.epd.wake_up(&mut self.spi, &mut Delay)?;
             self.sleeping = false;
         }
-        // Clear e-paper display's internal buffer
-        self.epd.clear_frame(&mut self.spi, &mut Delay)?;
         // Fill the display white
         self.display.clear(TriColor::White);
-        // Update screen
-        self.epd
-            .update_and_display_frame(&mut self.spi, self.display.buffer(), &mut Delay)
-            .unwrap();
-        // Let the display settle
-        Timer::after_millis(14_000).await;
+        // Clear e-paper display's buffer
+        self.epd.clear_frame(&mut self.spi, &mut Delay)?;
+        self.epd.wait_until_idle(&mut self.spi, &mut Delay)?;
         Ok(())
     }
 
@@ -81,7 +77,7 @@ impl<'a> Display<'a> {
             .text_color(TriColor::Black)
             .build();
 
-        Text::with_baseline("Test", Point::new(3, 100), text_style, Baseline::Top)
+        Text::with_baseline("Test", Point::new(100, 100), text_style, Baseline::Top)
             .draw(&mut self.display)
             .unwrap();
 
