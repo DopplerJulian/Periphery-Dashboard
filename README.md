@@ -9,14 +9,14 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 ## Hardware Requirements
 
 - [Raspberry Pi Pico 2 W](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#pico2w-technical-specification)
-- E-ink display ([Waveshare 7.5" 3 Color E-ink display](https://www.waveshare.com/wiki/Pico-ePaper-7.5-B)
+- E-ink display ([Waveshare 7.5" 3 Color E-ink display](https://www.waveshare.com/wiki/Pico-ePaper-7.5-B))
 - Debug probe (Optional)
 
 ## Software Tools
 
 - Rust, with the ``thumbv8m.main-none-eabihf`` target
 - [picotool](https://github.com/raspberrypi/picotool)
-- [probe-rs](https://probe.rs/) (For debugging)
+- [probe-rs](https://probe.rs/) (For logs & debugging)
 
 ## Roadmap
 
