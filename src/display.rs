@@ -35,7 +35,7 @@ impl<'a> Display<'a> {
     ) -> Result<Self, DeviceError<spi::Error, core::convert::Infallible>> {
         info!("setting up display");
         // Setup EPD
-        let mut epd = Epd7in5::new(&mut spi, busy_in, dc, rst, &mut Delay, None)?;
+        let mut epd = Epd7in5::new(&mut spi, busy_in, dc, rst, &mut Delay, None).unwrap();
         epd.set_background_color(TriColor::White);
 
         info!("epd created");
