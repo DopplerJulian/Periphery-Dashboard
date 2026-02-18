@@ -47,13 +47,8 @@ async fn main(spawner: Spawner) {
 
     _d.clear().await.unwrap();
     info!("cleared Display");
-    _d.display_text().unwrap();
-    info!("displaying Text");
-    Timer::after_millis(30_000).await;
-    _d.clear().await.unwrap();
-    info!("cleared Display");
 
-    let _bt_controller = bluetooth::init_bluetooth_controller(
+    let _bt_controller = bluetooth::controller::init(
         p.PIN_23, p.PIN_25, p.PIO0, p.PIN_24, p.PIN_29, p.DMA_CH0, &spawner,
     )
     .await;

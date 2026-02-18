@@ -11,7 +11,7 @@ use embassy_rp::{
 use static_cell::StaticCell;
 use trouble_host::prelude::ExternalController;
 
-pub async fn init_bluetooth_controller(
+pub async fn init(
     pwr_pin: Peri<'static, impl Pin>,
     cs_pin: Peri<'static, impl Pin>,
     pio_pin: Peri<'static, PIO0>,
@@ -21,10 +21,10 @@ pub async fn init_bluetooth_controller(
     spawner: &Spawner,
 ) -> ExternalController<BtDriver<'static>, 10> {
     // Load cyw43 firmware
-    let fw = aligned_bytes!("../firmware/43439A0.bin");
-    let btfw = aligned_bytes!("../firmware/43439A0_btfw.bin");
-    let clm = aligned_bytes!("../firmware/43439A0_clm.bin");
-    let nvram = aligned_bytes!("../firmware/nvram_rp2040.bin");
+    let fw = aligned_bytes!("../../firmware/43439A0.bin");
+    let btfw = aligned_bytes!("../../firmware/43439A0_btfw.bin");
+    let clm = aligned_bytes!("../../firmware/43439A0_clm.bin");
+    let nvram = aligned_bytes!("../../firmware/nvram_rp2040.bin");
 
     // Setup cyw43 controller
     let pwr = Output::new(pwr_pin, Level::Low);
