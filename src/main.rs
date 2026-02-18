@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-// mod ble_bas_per;
+mod ble_bas_per;
 mod bluetooth;
 mod display;
 
@@ -52,7 +52,7 @@ async fn main(spawner: Spawner) {
         p.PIN_23, p.PIN_25, p.PIO0, p.PIN_24, p.PIN_29, p.DMA_CH0, &spawner,
     )
     .await;
-    // ble_bas_per::run(_bt_controller).await;
+    ble_bas_per::run(_bt_controller).await;
 
     info!("initialized Bluetooth Controller");
 
