@@ -1,7 +1,6 @@
 #![no_std]
 #![no_main]
 
-mod ble_bas_per;
 mod bluetooth;
 mod display;
 
@@ -48,11 +47,11 @@ async fn main(spawner: Spawner) {
     _d.clear().await.unwrap();
     info!("cleared Display");
 
-    let _bt_controller = bluetooth::controller::init(
+    let (bt_controller, mac_addr) = bluetooth::controller::init(
         p.PIN_23, p.PIN_25, p.PIO0, p.PIN_24, p.PIN_29, p.DMA_CH0, &spawner,
     )
     .await;
-    ble_bas_per::run(_bt_controller).await;
+    bluetooth::peripheral::run(bt_controller, spawner, mac_addr).await;
 
     info!("initialized Bluetooth Controller");
 

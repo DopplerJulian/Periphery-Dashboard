@@ -23,8 +23,8 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 ### Scaffolding
 
 - [x] Setup initial project structure
-- [ ] Setup Bluetooth LE (TrouBLE + cyw43)
-- [ ] Setup E-ink display (find a suitable driver ~~or implement a basic one~~)
+- [x] Setup Bluetooth LE (TrouBLE + cyw43)
+- [x] Setup E-ink display (find a suitable driver ~~or implement a basic one~~)
 
 ### MVP
 
@@ -32,7 +32,7 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 - [ ] Link TrouBLE with E-ink driver
 - [ ] Set splash screen at (pre pairing)
 
-### Future
+### TBD
 
 - [ ] Configure passkey or numeric comparison pairing
 - [ ] Implement reconnection with known Hubs
@@ -51,3 +51,9 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 3) Pair and synchronise with Hub
 4) Display recieved images
 5) If the Hub disconnects return to pair mode
+
+## Learning Resources
+
+- https://pico.implrust.com
+- https://embassy.dev/book/
+- [The Rusty Bits](https://www.youtube.com/@therustybits)

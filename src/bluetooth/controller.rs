@@ -19,7 +19,7 @@ pub async fn init(
     clk_pin: Peri<'static, impl PioPin>,
     dma_pin: Peri<'static, DMA_CH0>,
     spawner: &Spawner,
-) -> ExternalController<BtDriver<'static>, 10> {
+) -> (ExternalController<BtDriver<'static>, 10>, [u8; 6]) {
     // Load cyw43 firmware
     let fw = aligned_bytes!("../../firmware/43439A0.bin");
     let btfw = aligned_bytes!("../../firmware/43439A0_btfw.bin");
@@ -47,10 +47,11 @@ pub async fn init(
     let (_net_device, bt_device, mut control, runner) =
         cyw43::new_with_bluetooth(state, pwr, spi, fw, btfw, nvram).await;
     spawner.spawn(unwrap!(cyw43_task(runner)));
+    let mac_addr = control.address().await;
     control.init(clm).await;
 
     let controller: ExternalController<_, 10> = ExternalController::new(bt_device);
-    controller
+    (controller, mac_addr)
 }
 
 bind_interrupts!(struct Irqs {
