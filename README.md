@@ -35,14 +35,15 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 ### TBD
 
 - [ ] Configure passkey or numeric comparison pairing
-- [ ] Implement reconnection with known Hubs
-- [ ] Implement image decompression 
+- [ ] Implement bonding
+- [ ] Implement image decompression
 - [ ] Override a segment of the display relevant information (e.g. last image received, last connection to hub, current firmware version)
 - [ ] Optimize for energy efficiency
 - [ ] Implement settings
 - [ ] Use async display driver
 - [ ] Introduce diagnostic LED
 - [ ] Introduce button(s) for basic control
+- [ ] Use Channels instead of a global singleton for the display
 
 ## (Planned) Lifecycle
 

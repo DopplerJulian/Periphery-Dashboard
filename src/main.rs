@@ -39,13 +39,16 @@ async fn main(spawner: Spawner) {
     let dc_pin = Output::new(p.PIN_8, Level::Low);
     let rst_pin = Output::new(p.PIN_12, Level::Low);
 
-    let mut _d =
+    let mut d =
         display::Display::new(spi_dev, busy_pin, dc_pin, rst_pin).expect("tried to init display");
-
     info!("initialized Display");
 
-    _d.clear().await.unwrap();
-    info!("cleared Display");
+    d.clear().await.unwrap();
+
+    *display::DISPLAY.lock().await = Some(d);
+
+    let mut guard = display::DISPLAY.lock().await;
+    guard.as_mut().unwrap().clear().await.unwrap();
 
     let (bt_controller, mac_addr) = bluetooth::controller::init(
         p.PIN_23, p.PIN_25, p.PIO0, p.PIN_24, p.PIN_29, p.DMA_CH0, &spawner,
@@ -71,7 +74,9 @@ async fn main(spawner: Spawner) {
 #[used]
 pub static PICOTOOL_ENTRIES: [embassy_rp::binary_info::EntryAddr; 4] = [
     embassy_rp::binary_info::rp_program_name!(c"periphery_dashboard"),
-    embassy_rp::binary_info::rp_program_description!(c"your program description"),
+    embassy_rp::binary_info::rp_program_description!(
+        c"A dashboard displaying images on a e-ink display, provided by a hub over Bluetooth LE"
+    ),
     embassy_rp::binary_info::rp_cargo_version!(),
     embassy_rp::binary_info::rp_program_build_attribute!(),
 ];
