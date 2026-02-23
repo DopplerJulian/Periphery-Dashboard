@@ -28,8 +28,8 @@ This project aims to provide the firmware for an E-ink dashboard that, in conjun
 
 ### MVP
 
-- [ ] Configure TrouBLE peripheral service
-- [ ] Link TrouBLE with E-ink driver
+- [x] Configure TrouBLE peripheral service
+- [x] Link TrouBLE with E-ink driver
 - [ ] Set splash screen at (pre pairing)
 
 ### TBD

@@ -47,25 +47,21 @@ async fn main(spawner: Spawner) {
 
     *display::DISPLAY.lock().await = Some(d);
 
-    let mut guard = display::DISPLAY.lock().await;
-    guard.as_mut().unwrap().clear().await.unwrap();
-
     let (bt_controller, mac_addr) = bluetooth::controller::init(
         p.PIN_23, p.PIN_25, p.PIO0, p.PIN_24, p.PIN_29, p.DMA_CH0, &spawner,
     )
     .await;
+    info!("initialized Bluetooth Controller");
     bluetooth::peripheral::run(bt_controller, spawner, mac_addr).await;
 
-    info!("initialized Bluetooth Controller");
-
-    let mut led = Output::new(p.PIN_15, Level::Low);
-    loop {
-        info!("Turning on LED");
-        led.set_high(); // Turn on the LED
-        Timer::after_millis(200).await;
-        led.set_low(); // Turn off the LED
-        Timer::after_millis(600).await;
-    }
+    // let mut led = Output::new(p.PIN_15, Level::Low);
+    // loop {
+    //     info!("Turning on LED");
+    //     led.set_high(); // Turn on the LED
+    //     Timer::after_millis(200).await;
+    //     led.set_low(); // Turn off the LED
+    //     Timer::after_millis(600).await;
+    // }
 }
 
 // Program metadata for `picotool info`.

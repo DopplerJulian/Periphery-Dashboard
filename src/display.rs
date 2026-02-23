@@ -75,11 +75,7 @@ impl<'a> Display<'a> {
         Ok(())
     }
 
-    pub fn write_to_buffer(
-        &mut self,
-        values: &[u8; 32],
-        cursor: u32,
-    ) -> Result<(), DeviceError<spi::Error, core::convert::Infallible>> {
+    pub fn write_to_buffer(&mut self, values: &[u8; 32], cursor: u32) {
         let colors = bytes_to_color(values);
         let display_width = 800u32;
         let pixel_cursor = cursor * 128;
@@ -126,13 +122,15 @@ impl<'a> Display<'a> {
             );
             self.display.fill_contiguous(&area, colors);
         }
-        Ok(())
     }
 
-    pub fn display_buffer(&mut self) {
+    pub fn display_buffer(
+        &mut self,
+    ) -> Result<(), DeviceError<spi::Error, core::convert::Infallible>> {
         self.epd
-            .update_and_display_frame(&mut self.spi, self.display.buffer(), &mut Delay)
-            .unwrap();
+            .update_and_display_frame(&mut self.spi, self.display.buffer(), &mut Delay)?;
+        self.epd.wait_until_idle(&mut self.spi, &mut Delay)?;
+        Ok(())
     }
 
     pub fn display_text(
@@ -157,11 +155,11 @@ impl<'a> Display<'a> {
 fn bytes_to_color(bytes: &[u8; 32]) -> [TriColor; 128] {
     let mut result = [TriColor::White; 128];
     for i in 0usize..16 {
-        let i = i * 2;
+        let k = i * 2;
 
         for j in 0u8..8 {
-            let black = bytes[i] >> j & 1;
-            let color = bytes[i + 1] >> j & 1;
+            let black = bytes[k] >> j & 1;
+            let color = bytes[k + 1] >> j & 1;
 
             if black == 1 && color == 1 {
             } else {

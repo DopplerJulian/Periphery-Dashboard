@@ -6,7 +6,7 @@ use static_cell::StaticCell;
 use trouble_host::prelude::*;
 use trouble_host::{Address, HostResources, prelude::DefaultPacketPool};
 
-use crate::bluetooth::profile::{DASHBOARD_UUID, DashboardService, SETTINGS_UUID, Server};
+use crate::bluetooth::profile::{DASHBOARD_UUID, SETTINGS_UUID, Server};
 
 const BLE_NAME: &str = "Dashboard";
 const CONNECTIONS_MAX: usize = 1;
@@ -114,17 +114,44 @@ async fn gatt_events_task<P: PacketPool>(
             GattConnectionEvent::Gatt { event } => {
                 match &event {
                     GattEvent::Read(event) => {
-                        if event.handle() == server.dashboard_service.ready.handle {
-                            let value = server.get(&server.dashboard_service.ready);
-                            info!("[gatt] Read Event to Ready Characteristic: {:?}", value);
+                        if event.handle() == server.dashboard_service.cursor.handle {
+                            let value = server.get(&server.dashboard_service.cursor);
+                            info!("[gatt] Read Event to Cursor Characteristic: {:?}", value);
                         }
                     }
                     GattEvent::Write(event) => {
                         if event.handle() == server.dashboard_service.write_buffer.handle {
+                            let mut bytes = [0u8; 32];
+                            for (place, data) in bytes.iter_mut().zip(event.data().iter()) {
+                                *place = *data
+                            }
+                            info!("[gatt] Internal write buffer contains: {:?}", bytes);
+
                             info!(
                                 "[gatt] Write Event to Level Characteristic: {:?}",
                                 event.data()
                             );
+                            let cursor = server.get(&server.dashboard_service.cursor).unwrap();
+
+                            let mut guard = crate::display::DISPLAY.lock().await;
+                            let display = guard.as_mut().unwrap();
+
+                            display.write_to_buffer(&bytes, cursor);
+
+                            server
+                                .dashboard_service
+                                .cursor
+                                .set(server, &(cursor + 1))
+                                .unwrap();
+                        } else if event.handle() == server.dashboard_service.write.handle {
+                            if event.data()[0] != 0 {
+                                let mut guard = crate::display::DISPLAY.lock().await;
+                                let display = guard.as_mut().unwrap();
+
+                                server.dashboard_service.cursor.set(server, &0u32).unwrap();
+
+                                display.display_buffer().unwrap();
+                            }
                         }
                     }
                     _ => {}

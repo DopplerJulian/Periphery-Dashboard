@@ -1,6 +1,6 @@
 [package]
 name = "periphery_dashboard"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 authors = ["Julian Doppler"]
 description = "This project aims to provide the firmware for an E-ink dashboard that, in conjunction with a local hub, can display images transmitted on a regular basis."

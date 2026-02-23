@@ -15,8 +15,10 @@ pub struct Server {
 pub struct DashboardService {
     #[characteristic(uuid = "00010001-50bf-48a2-9d8a-835aaa2fb179", write)]
     pub write_buffer: [u8; 32],
-    #[characteristic(uuid = "00010002-50bf-48a2-9d8a-835aaa2fb179", read, notify)]
-    pub ready: bool,
+    #[characteristic(uuid = "00010002-50bf-48a2-9d8a-835aaa2fb179", write)]
+    pub write: bool,
+    #[characteristic(uuid = "00010003-50bf-48a2-9d8a-835aaa2fb179", read)]
+    pub cursor: u32,
 }
 
 #[gatt_service(uuid = "00020000-50bf-48a2-9d8a-835aaa2fb179")]
